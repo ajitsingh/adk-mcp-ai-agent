@@ -7,24 +7,23 @@ tools:
   search_release_notes_bq:
     kind: bigquery-sql
     source: my-bq-source
-    description: Search recent Google Cloud release notes from the public BigQuery dataset.
+    description: |
+      Use this tool to get recent Google Cloud Release Notes.
     statement: |
       SELECT
         product_name,
-        title,
-        published_at,
-        preview
-      FROM `bigquery-public-data.google_cloud_release_notes.release_notes`
+        description,
+        published_at
+      FROM
+        `bigquery-public-data`.`google_cloud_release_notes`.`release_notes`
       WHERE
-        DATE(published_at) >= DATE_SUB(CURRENT_DATE(), INTERVAL 30 DAY)
-        AND (
-          LOWER(product_name) LIKE CONCAT('%', LOWER(@topic), '%')
-          OR LOWER(title) LIKE CONCAT('%', LOWER(@topic), '%')
-          OR LOWER(preview) LIKE CONCAT('%', LOWER(@topic), '%')
-        )
-      ORDER BY published_at DESC
+        DATE(published_at) >= DATE_SUB(CURRENT_DATE(), INTERVAL 7 DAY)
+      GROUP BY
+        product_name, description, published_at
+      ORDER BY
+        published_at DESC
       LIMIT 5
-    parameters:
-      - name: topic
-        type: string
-        description: Topic to search in release notes
+
+toolsets:
+  my_bq_toolset:
+    - search_release_notes_bq
