@@ -37,3 +37,13 @@ User → Cloud Run ADK Agent → Cloud Run MCP Toolbox → BigQuery → Structur
 curl -X POST https://YOUR-AGENT-URL/ask \
   -H "Content-Type: application/json" \
   -d '{"query":"bigquery"}'
+
+## Live Demo
+- Agent URL: https://adk-mcp-ai-agent-964549984080.us-central1.run.app
+- MCP Toolbox URL: https://mcp-toolbox-service-964549984080.us-central1.run.app
+
+### Test API
+```bash
+curl -X POST https://adk-mcp-ai-agent-964549984080.us-central1.run.app/ask \
+  -H "Content-Type: application/json" \
+  -d '{"query":"bigquery"}'  

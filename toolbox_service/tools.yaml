@@ -1,0 +1,29 @@
+sources:
+  my-bq-source:
+    kind: bigquery
+    project: adk-mcp-ai-agent
+
+tools:
+  search_release_notes_bq:
+    kind: bigquery-sql
+    source: my-bq-source
+    description: |
+      Use this tool to get recent Google Cloud Release Notes.
+    statement: |
+      SELECT
+        product_name,
+        description,
+        published_at
+      FROM
+        `bigquery-public-data`.`google_cloud_release_notes`.`release_notes`
+      WHERE
+        DATE(published_at) >= DATE_SUB(CURRENT_DATE(), INTERVAL 7 DAY)
+      GROUP BY
+        product_name, description, published_at
+      ORDER BY
+        published_at DESC
+      LIMIT 5
+
+toolsets:
+  my_bq_toolset:
+    - search_release_notes_bq
